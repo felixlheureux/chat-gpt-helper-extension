@@ -5,6 +5,8 @@ import { ChatGPTProvider, getChatGPTAccessToken, sendMessageFeedback } from './p
 import { OpenAIProvider } from './providers/openai';
 import { Provider } from './types';
 
+const id_prefix = 'chat-gpt';
+
 async function generateAnswers(port: Browser.Runtime.Port, question: string) {
   const providerConfigs = await getProviderConfigs();
 
@@ -64,5 +66,65 @@ Browser.runtime.onMessage.addListener(async (message) => {
 Browser.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
     Browser.runtime.openOptionsPage();
+  }
+});
+
+const parentMenu = Browser.contextMenus.create({
+  id: id_prefix,
+  title: 'ChatGPT Helper',
+  contexts: ['all'],
+});
+
+Browser.contextMenus.create({
+  id: `${id_prefix}-summarize`,
+  title: 'Summarize',
+  contexts: ['all'],
+  parentId: parentMenu,
+});
+
+Browser.contextMenus.create({
+  id: `${id_prefix}-definition`,
+  title: 'Definition',
+  contexts: ['all'],
+  parentId: parentMenu,
+});
+
+const translateParentMenu = Browser.contextMenus.create({
+  id: `${id_prefix}-translate`,
+  title: 'Translate',
+  contexts: ['all'],
+  parentId: parentMenu,
+});
+
+Browser.contextMenus.create({
+  id: `${id_prefix}-translate-english`,
+  title: 'English',
+  contexts: ['all'],
+  parentId: translateParentMenu,
+});
+
+Browser.contextMenus.create({
+  id: `${id_prefix}-translate-french`,
+  title: 'French',
+  contexts: ['all'],
+  parentId: translateParentMenu,
+});
+
+Browser.contextMenus.onClicked.addListener((info, tab) => {
+  switch (info.menuItemId) {
+    case `${id_prefix}-summarize`:
+      Browser.tabs.sendMessage(tab!.id!, { type: 'question', question: 'summarize' });
+      break;
+    case `${id_prefix}-definition`:
+      Browser.tabs.sendMessage(tab!.id!, { type: 'question', question: 'definition' });
+      break;
+    case `${id_prefix}-translate-english`:
+      Browser.tabs.sendMessage(tab!.id!, { type: 'question', question: 'translate-english' });
+      break;
+    case `${id_prefix}-translate-french`:
+      Browser.tabs.sendMessage(tab!.id!, { type: 'question', question: 'translate-french' });
+      break;
+    default:
+      break;
   }
 });

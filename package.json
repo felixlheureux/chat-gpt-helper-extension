@@ -1,6 +1,6 @@
 {
   "name": "chat-gpt-summerizer-google-extension",
-  "author": "wong2",
+  "author": "felixlheureux",
   "scripts": {
     "build": "node build.mjs",
     "lint": "eslint --ext .js,.mjs,.jsx .",
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@geist-ui/core": "^2.3.8",
+    "@popperjs/core": "^2.11.8",
     "@primer/octicons-react": "^17.9.0",
     "eventsource-parser": "^0.0.5",
     "expiry-map": "^2.0.0",
@@ -22,6 +23,7 @@
     "react": "npm:@preact/compat@^17.1.2",
     "react-dom": "npm:@preact/compat@^17.1.2",
     "react-markdown": "^8.0.4",
+    "react-popper": "^2.3.0",
     "rehype-highlight": "^6.0.0",
     "swr": "^2.0.0",
     "uuid": "^9.0.0"
