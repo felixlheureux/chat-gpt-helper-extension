@@ -6,8 +6,6 @@ import { ChatGPTProvider, getChatGPTAccessToken, sendMessageFeedback } from './p
 import { OpenAIProvider } from './providers/openai';
 import { Provider } from './types';
 
-const id_prefix = 'chat-gpt';
-
 async function generateAnswers(port: Browser.Runtime.Port, question: string) {
   const providerConfigs = await getProviderConfigs();
 
