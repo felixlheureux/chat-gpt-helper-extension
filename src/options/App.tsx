@@ -2,38 +2,20 @@ import { CssBaseline, GeistProvider, Radio, Select, Text, Toggle, useToasts } fr
 import { capitalize } from 'lodash-es';
 import { useCallback, useEffect, useMemo, useState } from 'preact/hooks';
 import '../base.css';
-import {
-  getUserConfig,
-  Language,
-  Theme,
-  TriggerMode,
-  TRIGGER_MODE_TEXT,
-  updateUserConfig,
-} from '../config';
+import { getUserConfig, Language, Theme, updateUserConfig } from '../config';
 import logo from '../logo.png';
 import { detectSystemColorScheme, getExtensionVersion } from '../utils';
 import ProviderSelect from './ProviderSelect';
 
 function OptionsPage(props: { theme: Theme; onThemeChange: (theme: Theme) => void }) {
-  const [triggerMode, setTriggerMode] = useState<TriggerMode>(TriggerMode.Always);
   const [language, setLanguage] = useState<Language>(Language.Auto);
   const { setToast } = useToasts();
 
   useEffect(() => {
     getUserConfig().then((config) => {
-      setTriggerMode(config.triggerMode);
       setLanguage(config.language);
     });
   }, []);
-
-  const onTriggerModeChange = useCallback(
-    (mode: TriggerMode) => {
-      setTriggerMode(mode);
-      updateUserConfig({ triggerMode: mode });
-      setToast({ text: 'Changes saved', type: 'success' });
-    },
-    [setToast],
-  );
 
   const onThemeChange = useCallback(
     (theme: Theme) => {
@@ -82,21 +64,6 @@ function OptionsPage(props: { theme: Theme; onThemeChange: (theme: Theme) => voi
       </nav>
       <main className="w-[500px] mx-auto mt-14">
         <Text h2>Options</Text>
-        <Text h3 className="mt-5">
-          Trigger Mode
-        </Text>
-        <Radio.Group
-          value={triggerMode}
-          onChange={(val) => onTriggerModeChange(val as TriggerMode)}>
-          {Object.entries(TRIGGER_MODE_TEXT).map(([value, texts]) => {
-            return (
-              <Radio key={value} value={value}>
-                {texts.title}
-                <Radio.Description>{texts.desc}</Radio.Description>
-              </Radio>
-            );
-          })}
-        </Radio.Group>
         <Text h3 className="mt-5">
           Theme
         </Text>

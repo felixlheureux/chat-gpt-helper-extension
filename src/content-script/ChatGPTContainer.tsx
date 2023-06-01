@@ -1,6 +1,7 @@
 import { XIcon } from '@primer/octicons-react';
 import { useEffect, useState } from 'react';
 import Browser from 'webextension-polyfill';
+import contextMenuActions from '../features/contextMenuActions';
 import ChatGPTQuery from './ChatGPTQuery';
 
 function ChatGPTContainer() {
@@ -13,25 +14,11 @@ function ChatGPTContainer() {
         if (!content) {
           return;
         }
-        switch (message.question) {
-          case 'summarize':
-            setQuestion(
-              `Summarize this text into a bullet point list of the most inportant information. <<< ${content} >>>`,
-            );
-            break;
-          case 'definition':
-            setQuestion(`What is the definition of <<< ${content} >>>`);
-            break;
-          case 'translate-english':
-            setQuestion(`Translate <<< ${content} >>> into English`);
-            break;
-          case 'translate-french':
-            setQuestion(`Translate <<< ${content} >>> into French`);
-            break;
-          default:
-            setQuestion('');
-            break;
-        }
+        contextMenuActions.forEach((action) => {
+          if (action.message === message.message && action.question) {
+            setQuestion(action.question(content));
+          }
+        });
       }
     });
   }, []);

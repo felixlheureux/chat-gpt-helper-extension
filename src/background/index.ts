@@ -1,6 +1,7 @@
 import Browser from 'webextension-polyfill';
 
 import { getProviderConfigs, ProviderType } from '../config';
+import contextMenuActions from '../features/contextMenuActions';
 import { ChatGPTProvider, getChatGPTAccessToken, sendMessageFeedback } from './providers/chatgpt';
 import { OpenAIProvider } from './providers/openai';
 import { Provider } from './types';
@@ -69,62 +70,15 @@ Browser.runtime.onInstalled.addListener((details) => {
   }
 });
 
-const parentMenu = Browser.contextMenus.create({
-  id: id_prefix,
-  title: 'ChatGPT Helper',
-  contexts: ['all'],
-});
-
-Browser.contextMenus.create({
-  id: `${id_prefix}-summarize`,
-  title: 'Summarize',
-  contexts: ['all'],
-  parentId: parentMenu,
-});
-
-Browser.contextMenus.create({
-  id: `${id_prefix}-definition`,
-  title: 'Definition',
-  contexts: ['all'],
-  parentId: parentMenu,
-});
-
-const translateParentMenu = Browser.contextMenus.create({
-  id: `${id_prefix}-translate`,
-  title: 'Translate',
-  contexts: ['all'],
-  parentId: parentMenu,
-});
-
-Browser.contextMenus.create({
-  id: `${id_prefix}-translate-english`,
-  title: 'English',
-  contexts: ['all'],
-  parentId: translateParentMenu,
-});
-
-Browser.contextMenus.create({
-  id: `${id_prefix}-translate-french`,
-  title: 'French',
-  contexts: ['all'],
-  parentId: translateParentMenu,
+contextMenuActions.forEach((menu) => {
+  const { message, question, ...rest } = menu;
+  Browser.contextMenus.create(rest as any);
 });
 
 Browser.contextMenus.onClicked.addListener((info, tab) => {
-  switch (info.menuItemId) {
-    case `${id_prefix}-summarize`:
-      Browser.tabs.sendMessage(tab!.id!, { type: 'question', question: 'summarize' });
-      break;
-    case `${id_prefix}-definition`:
-      Browser.tabs.sendMessage(tab!.id!, { type: 'question', question: 'definition' });
-      break;
-    case `${id_prefix}-translate-english`:
-      Browser.tabs.sendMessage(tab!.id!, { type: 'question', question: 'translate-english' });
-      break;
-    case `${id_prefix}-translate-french`:
-      Browser.tabs.sendMessage(tab!.id!, { type: 'question', question: 'translate-french' });
-      break;
-    default:
-      break;
-  }
+  contextMenuActions.forEach((menu) => {
+    if (menu.id === info.menuItemId && menu.message) {
+      Browser.tabs.sendMessage(tab!.id!, { type: 'question', message: menu.message });
+    }
+  });
 });
