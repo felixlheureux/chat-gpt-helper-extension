@@ -36,6 +36,7 @@ function ChatGPTContainer() {
           top: '0',
           right: '0',
           marginRight: '0.5rem',
+          cursor: 'pointer',
         }}>
         <XIcon />
       </div>

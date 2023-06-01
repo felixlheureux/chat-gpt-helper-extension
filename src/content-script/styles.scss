@@ -8,10 +8,17 @@
   z-index: 1;
 
   .chat-gpt-card {
+    position: fixed;
+    top: 0;
+    right: 0;
     border: 1px solid;
     border-radius: 8px;
     padding: 20px 15px 15px 15px;
+    margin: 8px;
     line-height: 1.5;
+    width: 428px;
+    max-height: 100vh;
+    overflow-y: auto;
   }
 
   &.sidebar-free {

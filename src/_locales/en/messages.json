@@ -1,8 +1,8 @@
 {
   "appName": {
-    "message": "ChatGPT for Google"
+    "message": "ChatGPT Helper"
   },
   "appDesc": {
-    "message": "Display ChatGPT response alongside search engine results"
+    "message": "ChatGPT Helper with preset actions for text selection"
   }
 }

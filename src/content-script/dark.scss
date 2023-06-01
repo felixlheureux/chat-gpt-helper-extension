@@ -1,14 +1,8 @@
 .chat-gpt-container.gpt-dark {
   .chat-gpt-card {
-    position: fixed;
-    top: 0;
-    right: 0;
     color: white;
     border-color: #3c4043;
     background-color: #0d1117;
-    width: 428px;
-    max-height: 100vh;
-    overflow-y: auto;
   }
 
   pre code.hljs {
